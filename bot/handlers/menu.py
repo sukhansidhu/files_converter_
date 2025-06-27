@@ -3,7 +3,7 @@ from telegram.ext import ContextTypes, CallbackQueryHandler
 from ..utils.buttons import main_menu_keyboard
 from .thumbnail_extractor import handle_thumbnail_request
 from .caption_editor import handle_caption_editor
-# from .metadata_editor import start_metadata_editor  # ❌ remove if not implemented
+# from .metadata_editor import start_metadata_editor  # ❌ Uncomment when ready
 
 async def menu_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
@@ -28,6 +28,12 @@ async def menu_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     elif data == "Cancel X":
         await query.delete_message()
+
+    else:
+        await query.edit_message_text(
+            "⚠️ Unknown option. Please return to the menu:",
+            reply_markup=main_menu_keyboard()
+        )
 
 def setup_menu_handlers(application):
     application.add_handler(CallbackQueryHandler(menu_callback))
