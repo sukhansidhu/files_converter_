@@ -13,6 +13,12 @@ def get_file_size(size_in_bytes):
     s = round(size_in_bytes / p, 2)
     return f"{s} {size_name[i]}"
 
+def format_file_size(size_in_bytes):
+    """
+    Alias to get_file_size for convenience.
+    """
+    return get_file_size(size_in_bytes)
+
 def sanitize_filename(filename):
     """Remove special characters from filenames to prevent errors."""
     return re.sub(r'[^\w\-_\. ]', '', filename)
