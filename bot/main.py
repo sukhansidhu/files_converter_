@@ -10,7 +10,7 @@ from bot.handlers.menu import setup_menu_handlers
 from bot.handlers.thumbnail_extractor import setup_thumbnail_handlers
 from bot.handlers.caption_editor import setup_caption_handlers
 from bot.handlers.progress_tracker import setup_progress_handlers
-from bot.handlers.media_receiver import setup_media_handlers  # Handles video/audio/doc uploads
+from bot.handlers.media_receiver import setup_media_handlers
 
 # ✅ Setup logging
 logging.basicConfig(
@@ -20,14 +20,14 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 def main():
+    # ✅ Initialize Telegram bot application first
+    application = Application.builder().token(Config.BOT_TOKEN).build()
+    
     # ✅ Ensure required directories exist
     os.makedirs(Config.DOWNLOAD_PATH, exist_ok=True)
     os.makedirs(Config.UPLOAD_PATH, exist_ok=True)
     os.makedirs(Config.THUMBNAIL_DIR, exist_ok=True)
     os.makedirs(Config.METADATA_DIR, exist_ok=True)
-
-    # ✅ Initialize Telegram bot application
-    application = Application.builder().token(Config.BOT_TOKEN).build()
 
     # ✅ Register all command/message handlers
     setup_start_handlers(application)
