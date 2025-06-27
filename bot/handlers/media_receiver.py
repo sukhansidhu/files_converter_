@@ -7,69 +7,80 @@ from bot.utils.helpers import get_file_name, get_file_size
 
 logger = logging.getLogger(__name__)
 
-# 🎬 Video Handler
 async def handle_video(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # Handle both video messages and video documents
-    if update.message.video:
-        file = update.message.video
-    elif update.message.document and "video" in update.message.document.mime_type:
-        file = update.message.document
-    else:
-        await update.message.reply_text("❌ No valid video file found.")
-        return
+    try:
+        # Try to get video from different sources
+        if update.message.video:
+            file = update.message.video
+            file_type = "video message"
+        elif update.message.document and update.message.document.mime_type.startswith('video/'):
+            file = update.message.document
+            file_type = "video document"
+        else:
+            logger.warning("Received non-video media as video")
+            return
 
-    filename = get_file_name(file)
-    size = get_file_size(file.file_size)
-    user_id = update.effective_user.id
-    logger.info(f"[🎬 Video] From {user_id} - {filename} ({size})")
-
-    await update.message.reply_text(
-        f"🎬 **Video Received:** `{filename}`\n📦 **Size:** `{size}`\n\nChoose what to do next:",
-        parse_mode="Markdown",
-        reply_markup=main_menu_keyboard()
-    )
-
-# 📁 Document Handler (non-video)
-async def handle_document(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # Skip video documents (handled by video handler)
-    if update.message.document and "video" in update.message.document.mime_type:
-        return
+        filename = get_file_name(file)
+        size = get_file_size(file.file_size)
+        user_id = update.effective_user.id
         
-    file = update.message.document
-    if not file:
-        return
+        logger.info(f"[🎬 VIDEO] From {user_id} - {filename} ({size}) - Type: {file_type}")
 
-    filename = get_file_name(file)
-    size = get_file_size(file.file_size)
-    user_id = update.effective_user.id
-    logger.info(f"[📁 Document] From {user_id} - {filename} ({size})")
+        await update.message.reply_text(
+            f"🎬 **Video Received:** `{filename}`\n📦 **Size:** `{size}`\n\nChoose what to do next:",
+            parse_mode="Markdown",
+            reply_markup=main_menu_keyboard()
+        )
+    except Exception as e:
+        logger.error(f"Video handler error: {str(e)}")
+        await update.message.reply_text("❌ Error processing your video. Please try again.")
 
-    await update.message.reply_text(
-        f"📁 **File Received:** `{filename}`\n📦 **Size:** `{size}`\n\nSelect an action:",
-        parse_mode="Markdown",
-        reply_markup=main_menu_keyboard()
-    )
+async def handle_document(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    try:
+        # Skip video documents (handled by video handler)
+        if update.message.document and update.message.document.mime_type.startswith('video/'):
+            return
+            
+        file = update.message.document
+        if not file:
+            return
 
-# 🎵 Audio Handler
+        filename = get_file_name(file)
+        size = get_file_size(file.file_size)
+        user_id = update.effective_user.id
+        logger.info(f"[📁 DOCUMENT] From {user_id} - {filename} ({size})")
+
+        await update.message.reply_text(
+            f"📁 **File Received:** `{filename}`\n📦 **Size:** `{size}`\n\nSelect an action:",
+            parse_mode="Markdown",
+            reply_markup=main_menu_keyboard()
+        )
+    except Exception as e:
+        logger.error(f"Document handler error: {str(e)}")
+
 async def handle_audio(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    file = update.message.audio
-    if not file:
-        return
+    try:
+        file = update.message.audio
+        if not file:
+            return
 
-    filename = get_file_name(file)
-    size = get_file_size(file.file_size)
-    user_id = update.effective_user.id
-    logger.info(f"[🎵 Audio] From {user_id} - {filename} ({size})")
+        filename = get_file_name(file)
+        size = get_file_size(file.file_size)
+        user_id = update.effective_user.id
+        logger.info(f"[🎵 AUDIO] From {user_id} - {filename} ({size})")
 
-    await update.message.reply_text(
-        f"🎵 **Audio Received:** `{filename}`\n📦 **Size:** `{size}`\n\nReady to edit or convert:",
-        parse_mode="Markdown",
-        reply_markup=main_menu_keyboard()
-    )
+        await update.message.reply_text(
+            f"🎵 **Audio Received:** `{filename}`\n📦 **Size:** `{size}`\n\nReady to edit or convert:",
+            parse_mode="Markdown",
+            reply_markup=main_menu_keyboard()
+        )
+    except Exception as e:
+        logger.error(f"Audio handler error: {str(e)}")
 
-# ✅ Register Handlers
 def setup_media_handlers(app):
-    app.add_handler(MessageHandler(filters.VIDEO, handle_video))
-    app.add_handler(MessageHandler(filters.Document.VIDEO, handle_video))
-    app.add_handler(MessageHandler(filters.Document.ALL & ~filters.Document.VIDEO, handle_document))
-    app.add_handler(MessageHandler(filters.AUDIO, handle_audio))
+    # Register with high priority (group 1)
+    app.add_handler(MessageHandler(filters.VIDEO, handle_video), group=1)
+    app.add_handler(MessageHandler(filters.Document.VIDEO | filters.Document.MimeType("video/*"), handle_video), group=1)
+    app.add_handler(MessageHandler(filters.Document.ALL, handle_document), group=1)
+    app.add_handler(MessageHandler(filters.AUDIO, handle_audio), group=1)
+    logger.info("Media handlers registered with high priority")
