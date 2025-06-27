@@ -1,7 +1,7 @@
 import os
 import subprocess
 import logging
-from config import Config
+from bot.config import Config
 
 logger = logging.getLogger(__name__)
 
