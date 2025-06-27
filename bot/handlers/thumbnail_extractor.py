@@ -2,9 +2,10 @@ import os
 import logging
 from telegram import Update
 from telegram.ext import ContextTypes, MessageHandler, CallbackQueryHandler, filters
-from config import Config
-from utils.ffmpeg import extract_thumbnail
-from utils.buttons import cancel_keyboard
+
+from bot.config import Config
+from bot.utils.ffmpeg import extract_thumbnail
+from bot.utils.buttons import cancel_keyboard
 
 logger = logging.getLogger(__name__)
 
@@ -30,19 +31,17 @@ async def process_thumbnail_video(update: Update, context: ContextTypes.DEFAULT_
         return
 
     try:
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        download_path = os.path.join(base_dir, "..", Config.DOWNLOAD_PATH)
-        thumbnail_dir = os.path.join(base_dir, "..", Config.THUMBNAIL_DIR)
+        # Ensure directories exist
+        os.makedirs(Config.DOWNLOAD_PATH, exist_ok=True)
+        os.makedirs(Config.THUMBNAIL_DIR, exist_ok=True)
 
-        os.makedirs(download_path, exist_ok=True)
-        os.makedirs(thumbnail_dir, exist_ok=True)
-
+        # Download the video
         video_file = await video.get_file()
-        video_path = os.path.join(download_path, f"{video.file_id}.mp4")
+        video_path = os.path.join(Config.DOWNLOAD_PATH, f"{video.file_id}.mp4")
         await video_file.download_to_drive(video_path)
 
-        # Call ffmpeg to extract thumbnail
-        thumbnail_path = extract_thumbnail(video_path, thumbnail_dir)
+        # Extract thumbnail
+        thumbnail_path = extract_thumbnail(video_path, Config.THUMBNAIL_DIR)
 
         if thumbnail_path and os.path.exists(thumbnail_path):
             with open(thumbnail_path, 'rb') as thumb:
