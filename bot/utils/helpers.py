@@ -4,9 +4,7 @@ import math
 from pymediainfo import MediaInfo
 
 def get_file_size(size_in_bytes):
-    """
-    Convert bytes to human-readable file size (e.g., KB, MB, GB).
-    """
+    """Convert bytes to human-readable file size (e.g., KB, MB, GB)."""
     if size_in_bytes == 0:
         return "0B"
     size_name = ("B", "KB", "MB", "GB", "TB")
@@ -16,9 +14,7 @@ def get_file_size(size_in_bytes):
     return f"{s} {size_name[i]}"
 
 def sanitize_filename(filename):
-    """
-    Remove special characters from filenames to prevent errors.
-    """
+    """Remove special characters from filenames to prevent errors."""
     return re.sub(r'[^\w\-_\. ]', '', filename)
 
 def generate_unique_filename(directory, filename):
@@ -67,3 +63,9 @@ def get_media_info(file_path):
             })
 
     return info
+
+def get_file_name(file):
+    """
+    Safely get filename from Telegram file object.
+    """
+    return getattr(file, "file_name", "unnamed_file.mp4")
