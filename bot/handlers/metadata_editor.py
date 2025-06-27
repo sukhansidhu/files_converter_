@@ -3,11 +3,11 @@ import logging
 from telegram import Update
 from telegram.ext import ContextTypes, CallbackQueryHandler, MessageHandler, filters
 
-from config import Config
-from utils.ffmpeg import edit_metadata
-from utils.helpers import get_media_info, generate_unique_filename
-from utils.buttons import metadata_editor_keyboard, progress_keyboard, cancel_keyboard
-from utils.progress_tracker import ProgressTracker
+from bot.config import Config
+from bot.utils.ffmpeg import edit_metadata
+from bot.utils.helpers import get_media_info, generate_unique_filename
+from bot.utils.buttons import metadata_editor_keyboard, progress_keyboard, cancel_keyboard
+from bot.utils.progress_tracker import ProgressTracker
 
 logger = logging.getLogger(__name__)
 
