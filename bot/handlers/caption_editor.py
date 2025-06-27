@@ -1,7 +1,7 @@
 import logging
 from telegram import Update
 from telegram.ext import ContextTypes, CallbackQueryHandler, MessageHandler, filters
-from utils.buttons import caption_editor_keyboard, cancel_keyboard
+from bot.utils.buttons import caption_editor_keyboard, cancel_keyboard
 
 logger = logging.getLogger(__name__)
 
