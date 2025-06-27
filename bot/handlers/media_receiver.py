@@ -7,7 +7,7 @@ from telegram.ext import ContextTypes, MessageHandler, filters
 from bot.utils.buttons import main_menu_keyboard
 
 # ✅ If you want to use FFmpeg functions or helpers later
-from bot.utils.ffmpegpy import extract_thumbnail, convert_video  # (example names)
+from bot.utils.ffmpeg import extract_thumbnail, convert_video  # (example names)
 from bot.utils.helpers import get_file_name, format_file_size     # (example names)
 
 async def handle_video(update: Update, context: ContextTypes.DEFAULT_TYPE):
