@@ -1,6 +1,6 @@
 from telegram import Update
 from telegram.ext import ContextTypes, CallbackQueryHandler
-from utils.buttons import main_menu_keyboard
+from bot.utils.buttons import main_menu_keyboard
 from .thumbnail_extractor import handle_thumbnail_request
 from .caption_editor import handle_caption_editor
 from .metadata_editor import start_metadata_editor
