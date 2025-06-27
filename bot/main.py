@@ -9,9 +9,9 @@ from bot.handlers.start import setup_start_handlers
 from bot.handlers.menu import setup_menu_handlers
 from bot.handlers.thumbnail_extractor import setup_thumbnail_handlers
 from bot.handlers.caption_editor import setup_caption_handlers
-from bot.handlers.metadata_editor import setup_metadata_handlers
+# from bot.handlers.metadata_editor import setup_metadata_handlers  # ❌ Not implemented yet
 from bot.handlers.progress_tracker import setup_progress_handlers
-from bot.handlers.media_receiver import setup_media_handlers  # ✅ NEW
+from bot.handlers.media_receiver import setup_media_handlers
 
 # Setup logging
 logging.basicConfig(
@@ -35,9 +35,9 @@ def main():
     setup_menu_handlers(application)
     setup_thumbnail_handlers(application)
     setup_caption_handlers(application)
-    setup_metadata_handlers(application)
+    # setup_metadata_handlers(application)  # ❌ Disabled until implemented
     setup_progress_handlers(application)
-    setup_media_handlers(application)  # ✅ Register media receiver handlers
+    setup_media_handlers(application)
 
     # ✅ Start polling
     logger.info("Bot is starting...")
