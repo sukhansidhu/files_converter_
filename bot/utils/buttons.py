@@ -13,8 +13,10 @@ def main_menu_keyboard():
         ["Create Archive", "Cancel X"]
     ]
     
+    # Proper row structure
     keyboard = [
-        [InlineKeyboardButton(text, callback_data=text)] for row in buttons for text in row
+        [InlineKeyboardButton(text, callback_data=text) for text in row]
+        for row in buttons
     ]
     
     return InlineKeyboardMarkup(keyboard)
@@ -29,10 +31,8 @@ def caption_editor_keyboard():
     ]
 
     keyboard = [
-        [
-            InlineKeyboardButton(text, callback_data=f"caption_{text.replace(' ', '_')}")
-            for text in row
-        ]
+        [InlineKeyboardButton(text, callback_data=f"caption_{text.replace(' ', '_')}") 
+         for text in row]
         for row in buttons
     ]
 
