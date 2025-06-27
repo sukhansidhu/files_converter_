@@ -1,7 +1,7 @@
 import time
 import os
-from config import Config
-from utils.helpers import get_file_size
+from bot.config import Config
+from bot.utils.helpers import get_file_size
 
 class ProgressTracker:
     def __init__(self, file_path, total_size, update, context, message_id):
@@ -16,11 +16,10 @@ class ProgressTracker:
         self.cancelled = False
         self.completed = False
 
-    def update_progress(self, chunk_size):
+    async def update_progress(self, chunk_size):
         self.downloaded += chunk_size
         current_time = time.time()
 
-        # Only update every 1 second
         if current_time - self.last_update_time < 1:
             return
 
@@ -30,7 +29,6 @@ class ProgressTracker:
         remaining = self.total_size - self.downloaded
         time_left = remaining / speed if speed > 0 else 0
 
-        # Build visual progress bar
         filled = int(percentage / 5)
         empty = 20 - filled
         progress_bar = '▰' * filled + '▱' * empty
@@ -46,21 +44,21 @@ class ProgressTracker:
         )
 
         try:
-            self.context.bot.edit_message_text(
+            await self.context.bot.edit_message_text(
                 chat_id=self.update.effective_chat.id,
                 message_id=self.message_id,
                 text=text,
                 parse_mode='HTML'
             )
-        except Exception as e:
-            pass  # Avoid flooding logs or halting on edit errors
+        except Exception:
+            pass
 
         self.last_update_time = current_time
 
-    def complete(self):
+    async def complete(self):
         self.completed = True
         try:
-            self.context.bot.edit_message_text(
+            await self.context.bot.edit_message_text(
                 chat_id=self.update.effective_chat.id,
                 message_id=self.message_id,
                 text="✅ Download completed. Processing video now..."
