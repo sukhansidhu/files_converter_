@@ -4,7 +4,7 @@ import math
 from pymediainfo import MediaInfo
 
 def get_file_size(size_in_bytes):
-    """Convert bytes into human-readable file size."""
+    """Convert bytes into a human-readable file size."""
     if size_in_bytes == 0:
         return "0B"
     size_name = ("B", "KB", "MB", "GB", "TB")
@@ -14,11 +14,11 @@ def get_file_size(size_in_bytes):
     return f"{s} {size_name[i]}"
 
 def sanitize_filename(filename):
-    """Sanitize filenames by removing unsafe characters."""
+    """Remove unsafe characters from a filename."""
     return re.sub(r'[^\w\-_\. ]', '', filename)
 
 def generate_unique_filename(directory, filename):
-    """Generate a unique filename to avoid overwriting existing files."""
+    """Generate a unique filename in a directory to avoid overwriting."""
     base, ext = os.path.splitext(filename)
     counter = 1
     while True:
@@ -28,7 +28,7 @@ def generate_unique_filename(directory, filename):
         counter += 1
 
 def get_media_info(file_path):
-    """Extract video/audio/subtitle metadata using pymediainfo."""
+    """Extract metadata (video/audio/subtitle) from media file using pymediainfo."""
     media_info = MediaInfo.parse(file_path)
     info = {}
 
