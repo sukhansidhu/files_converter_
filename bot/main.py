@@ -2,13 +2,13 @@ import logging
 import os
 from telegram.ext import Application
 
-from config import Config
-from handlers.start import setup_start_handlers
-from handlers.menu import setup_menu_handlers
-from handlers.thumbnail_extractor import setup_thumbnail_handlers
-from handlers.caption_editor import setup_caption_handlers
-from handlers.metadata_editor import setup_metadata_handlers
-from handlers.progress import setup_progress_handlers
+from bot.config import Config
+from bot.handlers.start import setup_start_handlers
+from bot.handlers.menu import setup_menu_handlers
+from bot.handlers.thumbnail_extractor import setup_thumbnail_handlers
+from bot.handlers.caption_editor import setup_caption_handlers
+from bot.handlers.metadata_editor import setup_metadata_handlers
+from bot.handlers.progress_tracker import setup_progress_handlers
 
 # Setup logging
 logging.basicConfig(
